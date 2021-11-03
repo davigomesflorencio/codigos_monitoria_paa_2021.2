@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Modelo de uso do MathJax (HTML+Latex)</title>
+
+    <!-- MATHJAX 3 (através da CDN) -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- MATHJAX 3 (salvo no computador) -->
+    <!-- <script type="text/javascript" async src="../../../Aplicativos/MathJax-master/es5/tex-mml-chtml.js" async></script> -->
+</head>
+
+<body>
+
+    <h1>(Potenciação inteira):</h1>
+
+    <ol>
+        <li>
+            Pré-condições: recebe como entrada dois inteiros b e n, onde n≥0 e não temos b e n nulos simultaneamente
+            (pois iria resultar em indeterminação).
+            <br>
+            <br>
+            Pós-condições: retorna o valor bn.
+            Um algoritmo força bruta inicializa uma variável com o valor b, e multiplica esta variável por b, n−1 vezes,
+            executando assim em tempo $$\theta(n)$$.
+            <br>
+            <br>
+            Para projetar um algoritmo por divisão e conquista podemos utilizar o fato de que $$b^n=b^{⌊n/2⌋}\cdot
+            b^{⌈n/2⌉}$$, pois
+            n=⌊n/2⌋+⌈n/2⌉.
+            <br>
+            <br>
+            Podemos então usar o valor de n como tamanho da entrada. Para este algoritmo, forneça o que é
+            pedido abaixo:
+
+            <br>
+            <br>
+
+            <ol type="a">
+                <li>
+                    De acordo com a demonstração abaixo, para qualquer entrada com n≥2 temos que as sub-instâncias
+                    (b,⌊n/2⌋) e (b,⌈n/2⌉) são estritamente menores que a entrada (b,n). Portanto, quais valores de n
+                    devem ser considerados no caso base, ou seja, para quais valores de n vamos produzir um resultado
+                    sem precisar fazer chamadas recursivas? Qual valor é retornado para cada valor de n no caso base?
+                    Justifique.
+
+                    <br>
+                    <br>
+
+                    Proposição: Para \(n\geq2\) temos que
+                    \(⌊n/2⌋< n \) e \(⌈n/2⌉< n\), pois <p style="color: yellow;">
+                        Casos \(n=0\) e \(n=1\) como casos base. 
+                        
+                        <br>
+                        <br>
+                        
+                        </p>
+                </li>
+
+                <br>
+                <br>
+
+                <li>As sub-instâncias (b,⌊n/2⌋) e (b,⌈n/2⌉) satisfazem as pré-condições? Elas são menores que a
+                    instância original?
+
+                    <p style="color: yellow;">
+                        Na 1a chamada recursiva passamos a subinstância \((b, \lfloor n/2 \rfloor),\) e na 2a chamada
+                        recursiva passamos a subinstância \((b, \lceil n/2 \rceil).\) Podemos violar a pré-condição da
+                        chamada recursiva quando \(b=0\) e \(n=1,\) pois neste caso \((b, \lfloor n/2 \rfloor) =
+                        (0,0).\) Outro problema do caso \(n=1\) seria produzir a substância \((b, \lceil 1/2 \rceil) =
+                        (b,1),\) que possui o mesmo tamanho da instância original \((b,1).\) Para contornar este
+                        problema usamos o caso base. 
+                    </p>
+                </li>
+
+                <br>
+                <br>
+
+                <li>Como as sub-soluções são combinadas para fornecer a solução para a instância original?
+
+                    <p style="color: yellow;">
+                        Basta multiplicar as duas subsoluções retornadas \(b^{\lfloor n/2 \rfloor}\) e \(b^{\lceil n/2
+                        \rceil},\) pois \(b^n = b^{\lfloor n/2 \rfloor} \cdot b^{\lceil n/2 \rceil}.\)</p>
+                </li>
+
+                <br>
+                <br>
+
+                <li>Forneça o pseudocódigo.
+
+                    <pre><code>
+                def pot(b,n):
+                    if n == 0:
+                        return 1
+                    elif n == 1:
+                        return b
+                    else:
+                        s1 = pot(b, math.floor(n/2))
+                        s2 = pot(b, math.ceil(n/2))
+                        return s1 * s2
+                </pre></code>
+                </li>
+
+                <br>
+                <br>
+
+                <li>Qual a complexidade de tempo em função de n? Para simplificar considere apenas o caso em que n é
+                    potência de 2, ou seja, ⌊n/2⌋=⌈n/2⌉=n/2. Este algoritmo tem complexidade menor que o algoritmo força
+                    bruta?
+                    <p style="color: yellow;">
+                        Pelo pseudocódigo extraímos a recorrência \(T(n) = 2 T(n/2) + \Theta(1) \in \Theta(n).\) Obs.:
+                        como o algoritmo força bruta também é \(\Theta(n),\) a divisão e conquista não reduziu a
+                        complexidade.
+                    </p>
+                </li>
+
+                <br>
+                <br>
+
+                <li>Podemos tentar reduzir a complexidade observando que bn=b⌊n/2⌋⋅b⌊n/2⌋ quando n é par, e que
+                    bn=b⌊n/2⌋⋅b⌊n/2⌋⋅b quando n é ímpar. Neste caso basta fazer uma chamada recursiva para obter b⌊n/2⌋,
+                    e utilizar esta valor para calcular bn. Como ficaria o pseudocódigo e a complexidade de tempo em
+                    função de n? Esta nova complexidade é menor que a do algoritmo força bruta?
+
+                    <pre><code>
+                        def pot(b,n):
+                            if n == 0:
+                                return 1
+                            elif n == 1:
+                                return b
+                            else:
+                                s1 = pot(b, math.floor(n/2))
+                                if n % 2 == 0:
+                                    return s1 * s1
+                                return s1 * s1 * b
+                        </pre></code>
+                    <p style="color: yellow;">
+                        Como fazemos apenas uma chamada recursiva, a recorrência agora vale \(T(n) = T(n/2) + \Theta(1)
+                        \in \Theta(\log n).\) Conseguimos então uma complexidade menor que o força bruta.
+                    </p>
+                </li>
+            </ol>
+        </li>
+    </ol>
+</body>
+
+</html>
